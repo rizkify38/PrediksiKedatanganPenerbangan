@@ -51,7 +51,6 @@ def home():
 @app.route('/prediksi', methods=['GET', 'POST'])
 def prediksi():
     if request.method == 'GET':
-        if request.method == 'GET':
         # Ambil langsung dari encoder (pasti bisa di-encode oleh model)
             maskapai_list = sorted(list(le_maskapai.classes_))
             daftar_rute   = sorted(list(le_rute.classes_))
