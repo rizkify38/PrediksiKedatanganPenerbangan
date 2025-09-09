@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Keterlambatan Penerbangan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .prediction-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .prediction-warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .prediction-error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .debug-panel {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .debug-header {
+            background: #343a40;
+            color: white;
+            padding: 10px 15px;
+            margin: -20px -20px 15px -20px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+        }
+        
+        .debug-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            margin: 5px 0;
+        }
+        
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .collapsible {
+            cursor: pointer;
+            background: #e9ecef;
+            color: #495057;
+            padding: 10px;
+            border: none;
+            text-align: left;
+            width: 100%;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .collapsible:hover {
+            background: #dee2e6;
+        }
+        
+        .collapsible-content {
+            display: none;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .route-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar gradient-bg mb-4">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold" href="/">
+                <i class="fas fa-plane me-2"></i>
+                Flight Delay Predictor
+            </a>
+            <a href="/" class="btn btn-outline-light">
+                <i class="fas fa-home me-1"></i> Beranda
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h2 class="card-title mb-4">
+                            <i class="fas fa-crystal-ball text-primary me-2"></i>
+                            Prediksi Keterlambatan Penerbangan
+                        </h2>
+                        
+                        <form method="POST" id="predictionForm">
+                            <div class="row">
+                                <!-- Tanggal & Waktu -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="tanggal_penerbangan" class="form-label">
+                                        <i class="fas fa-calendar me-1"></i>Tanggal Penerbangan
+                                    </label>
+                                    <input type="date" class="form-control" id="tanggal_penerbangan" 
+                                           name="tanggal_penerbangan" required>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="jam_keberangkatan" class="form-label">
+                                        <i class="fas fa-clock me-1"></i>Jam Keberangkatan
+                                    </label>
+                                    <input type="time" class="form-control" id="jam_keberangkatan" 
+                                           name="jam_keberangkatan" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Maskapai -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="maskapai" class="form-label">
+                                        <i class="fas fa-plane me-1"></i>Maskapai
+                                    </label>
+                                    <select class="form-select" id="maskapai" name="maskapai" required>
+                                        <option value="">Pilih Maskapai</option>
+                                        {% for maskapai in maskapai_list %}
+                                        <option value="{{ maskapai }}">{{ maskapai }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <!-- Bandara Asal -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="asal" class="form-label">
+                                        <i class="fas fa-plane-departure me-1"></i>Bandara Asal
+                                    </label>
+                                    <select class="form-select" id="asal" name="asal" required>
+                                        <option value="">Pilih Bandara Asal</option>
+                                        {% for asal in asal_list %}
+                                        <option value="{{ asal }}">{{ asal }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Bandara Tujuan -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="tujuan" class="form-label">
+                                        <i class="fas fa-plane-arrival me-1"></i>Bandara Tujuan
+                                    </label>
+                                    <select class="form-select" id="tujuan" name="tujuan" required>
+                                        <option value="">Pilih Bandara Tujuan</option>
+                                        {% for tujuan in tujuan_list %}
+                                        <option value="{{ tujuan }}">{{ tujuan }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <!-- Kondisi Cuaca -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="deskripsi_cuaca" class="form-label">
+                                        <i class="fas fa-cloud-sun me-1"></i>Kondisi Cuaca Tujuan
+                                    </label>
+                                    <select class="form-select" id="deskripsi_cuaca" name="deskripsi_cuaca" required>
+                                        <option value="">Pilih Kondisi Cuaca</option>
+                                        {% for cuaca in cuaca_list %}
+                                        <option value="{{ cuaca }}">{{ cuaca }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Parameter Cuaca -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="suhu" class="form-label">
+                                        <i class="fas fa-thermometer-half me-1"></i>Suhu (°C)
+                                    </label>
+                                    <input type="number" class="form-control" id="suhu" name="suhu" 
+                                           step="0.1" min="-50" max="60" required>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="tekanan" class="form-label">
+                                        <i class="fas fa-tachometer-alt me-1"></i>Tekanan (hPa)
+                                    </label>
+                                    <input type="number" class="form-control" id="tekanan" name="tekanan" 
+                                           step="0.1" min="800" max="1200" required>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <label for="kecepatan_angin" class="form-label">
+                                        <i class="fas fa-wind me-1"></i>Kecepatan Angin (km/h)
+                                    </label>
+                                    <input type="number" class="form-control" id="kecepatan_angin" name="kecepatan_angin" 
+                                           step="0.1" min="0" max="200" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-predict btn-primary btn-lg">
+                                    <i class="fas fa-magic me-2"></i>
+                                    <span id="btnText">Prediksi Keterlambatan</span>
+                                    <div id="loadingSpinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-info-circle text-info me-2"></i>
+                            Informasi Model
+                        </h5>
+                        <div class="small text-muted">
+                            <p><i class="fas fa-check-circle text-success me-1"></i> 
+                               Model menggunakan Label Encoders untuk encoding</p>
+                            <p><i class="fas fa-database text-primary me-1"></i> 
+                               Durasi normal berdasarkan mapping yang telah ditentukan</p>
+                            <p><i class="fas fa-cloud text-info me-1"></i> 
+                               Prediksi > 0 menit = terlambat, ≤ 0 = tepat waktu</p>
+                            <p><i class="fas fa-cogs text-warning me-1"></i> 
+                               Format input: tanggal ordinal + encoded features</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-route text-success me-2"></i>
+                            Rute Tersedia
+                        </h5>
+                        <div class="mb-3">
+                            {% for route in available_routes %}
+                            <span class="route-badge">{{ route }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="small text-muted">
+                            <p>• Jakarta-Padang: 110 menit</p>
+                            <p>• Jakarta-Surabaya: 80 menit</p>
+                            <p>• Jakarta-Bali: 170 menit</p>
+                            <p>• Jakarta-Makassar: 200 menit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hasil Prediksi -->
+        {% if prediction_result %}
+        <div class="row mt-4">
+            <div class="col-12">
+                {% if "tepat waktu" in prediction_result %}
+                    <div class="prediction-success">
+                {% elif "keterlambatan" in prediction_result %}
+                    <div class="prediction-warning">
+                {% else %}
+                    <div class="prediction-error">
+                {% endif %}
+                    <h4 class="mb-3">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Hasil Prediksi
+                    </h4>
+                    <h5 class="mb-0">{{ prediction_result | safe }}</h5>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Debug Information -->
+        {% if debug_info %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="debug-panel">
+                    <div class="debug-header">
+                        <i class="fas fa-bug me-2"></i>
+                        Debug Information & Analisis Prediksi
+                    </div>
+                    
+                    <!-- Info Dasar -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="debug-item">
+                                <strong>Maskapai & Rute:</strong> {{ debug_info.maskapai }} ({{ debug_info.rute }})<br>
+                                <strong>Tanggal & Jam:</strong> {{ debug_info.tanggal_penerbangan }} {{ debug_info.jam_keberangkatan }}<br>
+                                <strong>Bandara:</strong> {{ debug_info.bandara_asal }} → {{ debug_info.bandara_tujuan }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="debug-item">
+                                <strong>Durasi Normal:</strong> {{ debug_info.durasi_normal }} menit<br>
+                                <strong>Jadwal Kedatangan Normal:</strong> {{ debug_info.jadwal_kedatangan_normal }}<br>
+                                <strong>Predicted Delay:</strong> {{ debug_info.predicted_delay }} menit<br>
+                                <strong>Prediksi Kedatangan:</strong> {{ debug_info.prediksi_waktu_tiba }}<br>
+                                <strong>Sumber Data:</strong> {{ debug_info.data_source }}<br>
+                                <strong>Model Type:</strong> {{ debug_info.model_type }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Features & Encoding -->
+                    <button class="collapsible" onclick="toggleCollapsible(this)">
+                        <i class="fas fa-cogs me-2"></i>
+                        Input Features & Encoding
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="debug-item">
+                            {% for key, value in debug_info.input_features.items() %}
+                            <strong>{{ key | replace('_', ' ') | title }}:</strong> {{ value }}<br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Model Information -->
+                    <button class="collapsible" onclick="toggleCollapsible(this)">
+                        <i class="fas fa-brain me-2"></i>
+                        Model Information & Methodology
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </button>
+                    <div class="collapsible-content">
+                        <div class="debug-item">
+                            <h6><i class="fas fa-lightbulb text-warning me-2"></i>Cara Kerja Model:</h6>
+                            <ol>
+                                <li><strong>Input Encoding:</strong> Data dikodekan menggunakan Label Encoders</li>
+                                <li><strong>Durasi Normal:</strong> Diambil dari mapping yang sudah ditentukan</li>
+                                <li><strong>Prediksi Delay:</strong> Model memprediksi tambahan/pengurangan waktu</li>
+                                <li><strong>Hasil Akhir:</strong> Jadwal normal + predicted delay = waktu kedatangan prediksi</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="debug-item">
+                            <h6><i class="fas fa-cog text-info me-2"></i>Model Details:</h6>
+                            <ul>
+                                <li>Model Type: {{ debug_info.model_type }}</li>
+                                <li>Input Format: [tanggal_ordinal, maskapai_enc, rute_enc, deskripsi_enc, suhu, tekanan, kecepatan_angin]</li>
+                                <li>Encoding: Label Encoders untuk fitur kategorikal</li>
+                                <li>Sumber Durasi: Normal Duration Mapping</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="debug-item">
+                            <h6><i class="fas fa-route text-success me-2"></i>Duration Mapping:</h6>
+                            <ul>
+                                <li>Jakarta-Padang: 110 menit</li>
+                                <li>Jakarta-Surabaya: 80 menit</li>
+                                <li>Jakarta-Bali: 170 menit</li>
+                                <li>Jakarta-Makassar: 200 menit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-4 gradient-bg text-white">
+        <div class="container text-center">
+            <p class="mb-0">
+                <i class="fas fa-plane me-2"></i>
+                Flight Delay Prediction System - Powered by Machine Learning
+            </p>
+            <small class="text-white-50">Model: Label Encoders + Duration Mapping</small>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Form submission with loading state
+        document.getElementById('predictionForm').addEventListener('submit', function() {
+            const btnText = document.getElementById('btnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            btnText.textContent = 'Memproses Prediksi...';
+            loadingSpinner.style.display = 'inline-block';
+        });
+
+        // Collapsible functionality
+        function toggleCollapsible(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.fa-chevron-down, .fa-chevron-up');
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                content.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        }
+
+        // Auto-fill current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggal_penerbangan').value = today;
+        });
+
+        // Route validation
+        document.getElementById('asal').addEventListener('change', validateRoute);
+        document.getElementById('tujuan').addEventListener('change', validateRoute);
+
+        function validateRoute() {
+            const asal = document.getElementById('asal').value;
+            const tujuan = document.getElementById('tujuan').value;
+            
+            if (asal && tujuan) {
+                const route = asal + '-' + tujuan;
+                const supportedRoutes = [
+                    'Jakarta-Padang', 'Jakarta-Surabaya', 'Jakarta-Bali', 'Jakarta-Makassar',
+                    'Padang-Jakarta', 'Surabaya-Jakarta', 'Bali-Jakarta', 'Makassar-Jakarta'
+                ];
+                
+                if (!supportedRoutes.includes(route)) {
+                    alert(`Rute ${route} belum didukung. Rute tersedia: ${supportedRoutes.join(', ')}`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
