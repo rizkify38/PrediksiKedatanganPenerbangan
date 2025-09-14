@@ -26,7 +26,7 @@ le_deskripsi = label_encoders["Deskripsi_tujuan"]
 normal_duration_map = {
     "Jakarta-Padang": 110,
     "Jakarta-Surabaya": 80,
-    "Jakarta-Bali": 170,
+    "Jakarta-Denpasar": 170,
     "Jakarta-Makassar": 200,
 }
 
