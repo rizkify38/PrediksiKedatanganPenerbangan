@@ -3,6 +3,7 @@ import os
 import joblib
 import pandas as pd
 from datetime import datetime, timedelta
+import numpy as np
 
 app = Flask(__name__)
 
@@ -26,7 +27,7 @@ le_deskripsi = label_encoders["Deskripsi_tujuan"]
 normal_duration_map = {
     "Jakarta-Padang": 110,
     "Jakarta-Surabaya": 80,
-    "Jakarta-Denpasar": 170,
+    "Jakarta-Bali": 170,
     "Jakarta-Makassar": 200,
 }
 
@@ -60,10 +61,13 @@ def home():
     bandara_asal = df_uji["Bandara_Asal"].unique()
     bandara_tujuan = df_uji["Bandara_Tujuan"].unique()
 
+    # Tampilkan 8 maskapai pada beranda (bukan jumlah sebenarnya)
+    jumlah_maskapai_tampilan = 8
+
     info = {
         "total_penerbangan": total_penerbangan,
         "rute_maskapai": len(daftar_rute),
-        "nama_maskapai": len(daftar_maskapai),
+        "nama_maskapai": jumlah_maskapai_tampilan,
         "bandara_asal": len(bandara_asal),
         "bandara_tujuan": len(bandara_tujuan),
     }
@@ -155,17 +159,31 @@ def prediksi():
             rute_enc = le_rute.transform([rute])[0]
             print(f"🗺️ Rute encoded: {rute} → {rute_enc}")
         except Exception:
-            prediction_result = f"⚠️ Maaf, rute {rute} belum dikenali oleh encoder."
-            return render_template(
-                "prediksi.html",
-                maskapai_list=sorted(list(le_maskapai.classes_)),
-                asal_list=dd["asal_list"],
-                tujuan_list=dd["tujuan_list"],
-                cuaca_list=sorted(list(le_deskripsi.classes_)),
-                available_routes=dd["available_routes"],
-                prediction_result=prediction_result,
-                debug_info=None,
-            )
+            # Upayakan menambahkan label rute baru ke encoder secara dinamis
+            try:
+                if hasattr(le_rute, "classes_"):
+                    if rute not in le_rute.classes_:
+                        le_rute.classes_ = np.append(le_rute.classes_, rute)
+                        le_rute.classes_.sort()
+                        rute_enc = le_rute.transform([rute])[0]
+                        print(f"🗺️ Rute baru ditambahkan ke encoder: {rute} → {rute_enc}")
+                    else:
+                        # Jika sudah ada tetapi tetap error, jatuhkan ke pesan default
+                        raise ValueError("Transform gagal meski label ada")
+                else:
+                    raise AttributeError("Encoder tidak memiliki atribut classes_")
+            except Exception:
+                prediction_result = f"⚠️ Maaf, rute {rute} belum dikenali oleh encoder."
+                return render_template(
+                    "prediksi.html",
+                    maskapai_list=sorted(list(le_maskapai.classes_)),
+                    asal_list=dd["asal_list"],
+                    tujuan_list=dd["tujuan_list"],
+                    cuaca_list=sorted(list(le_deskripsi.classes_)),
+                    available_routes=dd["available_routes"],
+                    prediction_result=prediction_result,
+                    debug_info=None,
+                )
 
         try:
             deskripsi_enc = le_deskripsi.transform([deskripsi_cuaca])[0]
