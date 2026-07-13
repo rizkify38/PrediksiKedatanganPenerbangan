@@ -3,258 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Delay Predictor - Beranda</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .btn-predict {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-predict:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 2rem;
-        }
-    </style>
+    <title>Prediksi Keterlambatan Penerbangan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
-<body class="bg-light">
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container text-center">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <i class="fas fa-plane display-1 mb-4"></i>
-                    <h1 class="display-4 fw-bold mb-4">Flight Delay Predictor</h1>
-                    <p class="lead mb-5">
-                        Prediksi keterlambatan kedatangan penerbangan menggunakan teknologi machine learning 
-                        berdasarkan data historis dan kondisi cuaca real-time.
-                    </p>
-                    <a href="/prediksi" class="btn btn-predict btn-primary btn-lg">
-                        <i class="fas fa-crystal-ball me-2"></i>
-                        Mulai Prediksi
-                    </a>
-                </div>
+<body>
+
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar-app" id="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="/">
+                <span class="brand-icon"><i class="fas fa-plane"></i></span>
+                Flight Delay Predictor
+            </a>
+            <a href="/prediksi" class="nav-link-btn primary">
+                <i class="fas fa-arrow-right"></i> Mulai Prediksi
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-plane"><i class="fas fa-plane"></i></div>
+        <div class="hero-plane"><i class="fas fa-plane"></i></div>
+        <div class="hero-plane"><i class="fas fa-plane"></i></div>
+        <div class="container text-center position-relative">
+            <div class="hero-badge reveal">
+                <i class="fas fa-brain"></i> Machine Learning
+            </div>
+            <h1 class="reveal reveal-delay-1">Prediksi Kedatangan<br>Penerbangan Anda</h1>
+            <p class="lead reveal reveal-delay-2">
+                Ketahui estimasi waktu kedatangan penerbangan berdasarkan data historis
+                dan kondisi cuaca — cepat, akurat, dan mudah digunakan.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap reveal reveal-delay-3">
+                <a href="/prediksi" class="btn-primary-app lg">
+                    <i class="fas fa-search"></i> <span>Cek Prediksi</span>
+                </a>
+                <a href="#fitur" class="btn-outline-app">
+                    <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-5">
+    <!-- Stats -->
+    <section class="section">
         <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col">
-                    <h2 class="fw-bold">Statistik Database</h2>
-                    <p class="text-muted">Data penerbangan yang tersedia dalam sistem</p>
-                </div>
+            <div class="section-header reveal">
+                <h2>Data dalam Sistem</h2>
+                <p>Statistik database penerbangan yang tersedia</p>
             </div>
-            
             <div class="row g-4">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 reveal reveal-delay-1">
                     <div class="stat-card">
-                        <i class="fas fa-plane-departure text-primary fa-3x mb-3"></i>
-                        <div class="stat-number">{{ info.total_penerbangan }}</div>
-                        <p class="text-muted mb-0">Total Penerbangan</p>
+                        <div class="stat-icon blue"><i class="fas fa-plane-departure"></i></div>
+                        <div class="stat-number"><span class="counter" data-target="{{ info.total_penerbangan }}">0</span></div>
+                        <p class="stat-label">Total Penerbangan</p>
                     </div>
                 </div>
-                
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 reveal reveal-delay-2">
                     <div class="stat-card">
-                        <i class="fas fa-route text-success fa-3x mb-3"></i>
-                        <div class="stat-number">{{ info.rute_maskapai }}</div>
-                        <p class="text-muted mb-0">Rute Tersedia</p>
+                        <div class="stat-icon green"><i class="fas fa-route"></i></div>
+                        <div class="stat-number"><span class="counter" data-target="{{ info.rute_maskapai }}">0</span></div>
+                        <p class="stat-label">Rute Tersedia</p>
                     </div>
                 </div>
-                
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 reveal reveal-delay-3">
                     <div class="stat-card">
-                        <i class="fas fa-building text-info fa-3x mb-3"></i>
-                        <div class="stat-number">{{ info.nama_maskapai }}</div>
-                        <p class="text-muted mb-0">Maskapai</p>
+                        <div class="stat-icon cyan"><i class="fas fa-building"></i></div>
+                        <div class="stat-number"><span class="counter" data-target="{{ info.nama_maskapai }}">0</span></div>
+                        <p class="stat-label">Maskapai</p>
                     </div>
                 </div>
-                
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 reveal reveal-delay-4">
                     <div class="stat-card">
-                        <i class="fas fa-map-marker-alt text-warning fa-3x mb-3"></i>
-                        <div class="stat-number">{{ info.bandara_asal + info.bandara_tujuan }}</div>
-                        <p class="text-muted mb-0">Total Bandara</p>
+                        <div class="stat-icon amber"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="stat-number"><span class="counter" data-target="{{ info.bandara_asal + info.bandara_tujuan }}">0</span></div>
+                        <p class="stat-label">Total Bandara</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-5 bg-white">
+    <!-- Features -->
+    <section class="section bg-surface" id="fitur">
         <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col">
-                    <h2 class="fw-bold">Fitur Unggulan</h2>
-                    <p class="text-muted">Mengapa memilih sistem prediksi kami?</p>
-                </div>
+            <div class="section-header reveal">
+                <h2>Mengapa Menggunakan Sistem Ini?</h2>
+                <p>Teknologi prediksi yang andal dan mudah diakses</p>
             </div>
-            
             <div class="row g-4">
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
+                <div class="col-md-4 reveal reveal-delay-1">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                        <h5>Machine Learning</h5>
+                        <p>Algoritma Random Forest dengan label encoders untuk prediksi keterlambatan yang akurat.</p>
                     </div>
-                    <h5>Machine Learning</h5>
-                    <p class="text-muted">
-                        Menggunakan algoritma machine learning terbaru dengan 
-                        label encoders untuk prediksi yang akurat.
-                    </p>
                 </div>
-                
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-database"></i>
+                <div class="col-md-4 reveal reveal-delay-2">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-database"></i></div>
+                        <h5>Data Historis</h5>
+                        <p>Dibangun dari ribuan data penerbangan dengan durasi normal yang sudah terukur.</p>
                     </div>
-                    <h5>Data Historis</h5>
-                    <p class="text-muted">
-                        Berdasarkan ribuan data historis penerbangan 
-                        dengan durasi normal yang sudah ditentukan.
-                    </p>
                 </div>
-                
-                <div class="col-md-4 text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-cloud-sun"></i>
+                <div class="col-md-4 reveal reveal-delay-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cloud-sun"></i></div>
+                        <h5>Analisis Cuaca</h5>
+                        <p>Mempertimbangkan suhu, tekanan, dan kecepatan angin di bandara tujuan.</p>
                     </div>
-                    <h5>Analisis Cuaca</h5>
-                    <p class="text-muted">
-                        Mempertimbangkan kondisi cuaca real-time di 
-                        bandara tujuan untuk prediksi yang lebih tepat.
-                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Supported Routes Section -->
-    <section class="py-5 bg-light">
+    <!-- Routes -->
+    <section class="section">
         <div class="container">
-            <div class="row text-center mb-5">
-                <div class="col">
-                    <h2 class="fw-bold">Rute yang Didukung</h2>
-                    <p class="text-muted">Saat ini sistem mendukung prediksi untuk rute-rute berikut</p>
-                </div>
+            <div class="section-header reveal">
+                <h2>Rute yang Didukung</h2>
+                <p>Prediksi tersedia untuk rute-rute berikut</p>
             </div>
-            
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card">
-                        <i class="fas fa-plane text-primary fa-2x mb-3"></i>
-                        <h6 class="fw-bold">Jakarta ↔ Padang</h6>
-                        <small class="text-muted">Durasi Normal: 110 menit</small>
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
+                    <div class="route-card">
+                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                        <h6>Jakarta ↔ Padang</h6>
+                        <span class="duration">Durasi normal: 110 menit</span>
                     </div>
                 </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card">
-                        <i class="fas fa-plane text-success fa-2x mb-3"></i>
-                        <h6 class="fw-bold">Jakarta ↔ Surabaya</h6>
-                        <small class="text-muted">Durasi Normal: 80 menit</small>
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
+                    <div class="route-card">
+                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                        <h6>Jakarta ↔ Surabaya</h6>
+                        <span class="duration">Durasi normal: 80 menit</span>
                     </div>
                 </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card">
-                        <i class="fas fa-plane text-info fa-2x mb-3"></i>
-                        <h6 class="fw-bold">Jakarta ↔ Bali</h6>
-                        <small class="text-muted">Durasi Normal: 170 menit</small>
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
+                    <div class="route-card">
+                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                        <h6>Jakarta ↔ Bali</h6>
+                        <span class="duration">Durasi normal: 170 menit</span>
                     </div>
                 </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card">
-                        <i class="fas fa-plane text-warning fa-2x mb-3"></i>
-                        <h6 class="fw-bold">Jakarta ↔ Makassar</h6>
-                        <small class="text-muted">Durasi Normal: 200 menit</small>
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
+                    <div class="route-card">
+                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                        <h6>Jakarta ↔ Makassar</h6>
+                        <span class="duration">Durasi normal: 200 menit</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-5 gradient-bg">
-        <div class="container text-center">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <h2 class="text-white fw-bold mb-4">Siap Mencoba?</h2>
-                    <p class="text-white mb-4">
-                        Dapatkan prediksi keterlambatan kedatangan penerbangan Anda sekarang juga 
-                        dengan teknologi machine learning terdepan!
-                    </p>
-                    <a href="/prediksi" class="btn btn-light btn-lg">
-                        <i class="fas fa-rocket me-2"></i>
-                        Mulai Prediksi Sekarang
-                    </a>
-                </div>
+    <!-- CTA -->
+    <section class="section pt-0">
+        <div class="container">
+            <div class="cta-banner reveal">
+                <h2>Siap Mencoba Prediksi?</h2>
+                <p>Masukkan detail penerbangan Anda dan dapatkan estimasi waktu kedatangan dalam hitungan detik.</p>
+                <a href="/prediksi" class="btn-primary-app lg">
+                    <i class="fas fa-plane"></i> Mulai Sekarang
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 bg-dark text-white text-center">
+    <footer class="footer-app">
         <div class="container">
-            <p class="mb-0">
-                <i class="fas fa-plane me-2"></i>
-                Flight Delay Prediction System - Powered by Rizki Fauzan Yahya &copy; 2025
+            <p>
+                <span class="footer-brand">Flight Delay Predictor</span>
+                &mdash; Rizki Fauzan Yahya &copy; 2025
             </p>
-            <small class="text-muted">Model: Label Encoders + Duration Mapping</small>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===== Particles =====
+        (function initParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            const count = 20;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 8 + 's';
+                p.style.animationDuration = (6 + Math.random() * 6) + 's';
+                p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+                container.appendChild(p);
+            }
+        })();
+
+        // ===== Sticky Nav Shadow =====
+        (function navScroll() {
+            const nav = document.getElementById('navbar');
+            let ticking = false;
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    requestAnimationFrame(function () {
+                        nav.classList.toggle('scrolled', window.scrollY > 20);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        })();
+
+        // ===== Scroll Reveal =====
+        (function scrollReveal() {
+            const els = document.querySelectorAll('.reveal');
+            if (!els.length) return;
+            const observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            els.forEach(function (el) { observer.observe(el); });
+        })();
+
+        // ===== Animated Counters =====
+        (function animateCounters() {
+            var counters = document.querySelectorAll('.counter');
+            if (!counters.length) return;
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        var el = entry.target;
+                        var target = parseInt(el.getAttribute('data-target')) || 0;
+                        if (target === 0) { el.textContent = '0'; return; }
+                        var duration = 1200;
+                        var startTime = null;
+                        function step(timestamp) {
+                            if (!startTime) startTime = timestamp;
+                            var progress = Math.min((timestamp - startTime) / duration, 1);
+                            var eased = 1 - Math.pow(1 - progress, 3);
+                            el.textContent = Math.floor(eased * target);
+                            if (progress < 1) requestAnimationFrame(step);
+                            else el.textContent = target;
+                        }
+                        requestAnimationFrame(step);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+            counters.forEach(function (c) { observer.observe(c); });
+        })();
+
+        // ===== Route Card Mouse Parallax =====
+        (function routeCards() {
+            var cards = document.querySelectorAll('.route-card');
+            cards.forEach(function (card) {
+                card.addEventListener('mousemove', function (e) {
+                    var rect = card.getBoundingClientRect();
+                    var x = ((e.clientX - rect.left) / rect.width) * 100;
+                    var y = ((e.clientY - rect.top) / rect.height) * 100;
+                    card.style.setProperty('--mouse-x', x + '%');
+                    card.style.setProperty('--mouse-y', y + '%');
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
