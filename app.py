@@ -1,9 +1,10 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import os
 import joblib
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
+from weather import get_weather_for_city, SUPPORTED_CITIES
 
 app = Flask(__name__)
 
@@ -290,6 +291,18 @@ def prediksi():
 def predict():
     """Alias untuk /prediksi"""
     return prediksi()
+
+@app.route("/api/cuaca/<kota>")
+def api_cuaca(kota):
+    """Cuaca terkini untuk kota tujuan (Bali, Makassar, Padang, Surabaya)."""
+    if kota not in SUPPORTED_CITIES:
+        return jsonify({"error": f"Kota '{kota}' tidak didukung"}), 404
+    try:
+        return jsonify(get_weather_for_city(kota))
+    except (ConnectionError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 502
+    except Exception as exc:
+        return jsonify({"error": f"Terjadi kesalahan: {exc}"}), 500
 
 if __name__ == "__main__":
     print("🚀 Starting Flight Delay Prediction Server...")
