@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Keterlambatan Penerbangan</title>
+    <title>Prediksi Keterlambatan Penerbangan - Flight Delay Predictor</title>
+    <meta name="description" content="Prediksi estimasi waktu kedatangan penerbangan berdasarkan data historis dan kondisi cuaca real-time. Cepat, akurat, dan mudah digunakan.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,74 +21,135 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="/">
                 <span class="brand-icon"><i class="fas fa-plane"></i></span>
-                Flight Delay Predictor
+                <span class="d-none d-sm-inline">Flight Delay Predictor</span>
+                <span class="d-inline d-sm-none">FDP</span>
             </a>
-            <a href="/prediksi" class="nav-link-btn primary">
-                <i class="fas fa-arrow-right"></i> Mulai Prediksi
-            </a>
+            <div class="d-flex gap-2">
+                <a href="/" class="nav-link-btn active">
+                    <i class="fas fa-home"></i> <span class="d-none d-md-inline">Beranda</span>
+                </a>
+                <a href="/prediksi" class="nav-link-btn primary">
+                    <i class="fas fa-arrow-right"></i> Mulai Prediksi
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" id="beranda">
         <div class="hero-grid"></div>
         <div class="hero-plane"><i class="fas fa-plane"></i></div>
         <div class="hero-plane"><i class="fas fa-plane"></i></div>
         <div class="hero-plane"><i class="fas fa-plane"></i></div>
         <div class="container text-center position-relative">
             <div class="hero-badge reveal">
-                <i class="fas fa-brain"></i> Machine Learning
+                <i class="fas fa-brain"></i> Machine Learning &mdash; Random Forest
             </div>
-            <h1 class="reveal reveal-delay-1">Prediksi Kedatangan<br>Penerbangan Anda</h1>
+            <h1 class="reveal reveal-delay-1">
+                Prediksi Kedatangan<br>
+                <span class="text-gradient">Penerbangan Anda</span>
+            </h1>
             <p class="lead reveal reveal-delay-2">
                 Ketahui estimasi waktu kedatangan penerbangan berdasarkan data historis
-                dan kondisi cuaca — cepat, akurat, dan mudah digunakan.
+                dan kondisi cuaca <strong>real-time</strong> &mdash; cepat, akurat, dan mudah digunakan.
             </p>
             <div class="d-flex gap-3 justify-content-center flex-wrap reveal reveal-delay-3">
                 <a href="/prediksi" class="btn-primary-app lg">
-                    <i class="fas fa-search"></i> <span>Cek Prediksi</span>
+                    <i class="fas fa-search"></i> Cek Prediksi Sekarang
                 </a>
-                <a href="#fitur" class="btn-outline-app">
-                    <i class="fas fa-info-circle"></i> Pelajari Lebih Lanjut
+                <a href="#cara-kerja" class="btn-outline-app">
+                    <i class="fas fa-play-circle"></i> Lihat Cara Kerja
                 </a>
+            </div>
+
+            <!-- Hero Stats Strip -->
+            <div class="hero-strip reveal reveal-delay-4">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">{{ info.rute_maskapai }}</span>
+                    <span class="hero-stat-label">Rute Tersedia</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">{{ info.nama_maskapai }}</span>
+                    <span class="hero-stat-label">Maskapai</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">{{ info.bandara_asal + info.bandara_tujuan }}</span>
+                    <span class="hero-stat-label">Bandara</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section bg-surface" id="cara-kerja">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Cara Kerja</span>
+                <h2>Bagaimana Cara Menggunakannya?</h2>
+                <p>Cukup 3 langkah mudah untuk mendapatkan prediksi keterlambatan penerbangan</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 reveal reveal-delay-1">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon"><i class="fas fa-route"></i></div>
+                        <h5>Pilih Rute &amp; Maskapai</h5>
+                        <p>Tentukan bandara asal, tujuan, dan maskapai penerbangan yang akan digunakan.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal reveal-delay-2">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon"><i class="fas fa-cloud-sun"></i></div>
+                        <h5>Masukkan Data Penerbangan</h5>
+                        <p>Lengkapi informasi tanggal, jam keberangkatan, dan data cuaca real-time tujuan.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal reveal-delay-3">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                        <h5>Dapatkan Hasil Prediksi</h5>
+                        <p>Sistem akan memproses data dan menampilkan estimasi waktu kedatangan secara instan.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Stats -->
-    <section class="section">
+    <section class="section" id="statistik">
         <div class="container">
             <div class="section-header reveal">
-                <h2>Data dalam Sistem</h2>
-                <p>Statistik database penerbangan yang tersedia</p>
+                <span class="section-tag">Statistik</span>
+                <h2>Database Penerbangan</h2>
+                <p>Sistem dilatih menggunakan data historis penerbangan domestik Indonesia</p>
             </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 reveal reveal-delay-1">
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><i class="fas fa-plane-departure"></i></div>
-                        <div class="stat-number"><span class="counter" data-target="{{ info.total_penerbangan }}">0</span></div>
-                        <p class="stat-label">Total Penerbangan</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 reveal reveal-delay-2">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6 reveal reveal-delay-1">
                     <div class="stat-card">
                         <div class="stat-icon green"><i class="fas fa-route"></i></div>
                         <div class="stat-number"><span class="counter" data-target="{{ info.rute_maskapai }}">0</span></div>
                         <p class="stat-label">Rute Tersedia</p>
+                        <p class="stat-desc">Rute penerbangan dari Jakarta ke berbagai kota</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 reveal reveal-delay-3">
+                <div class="col-lg-4 col-md-6 reveal reveal-delay-2">
                     <div class="stat-card">
-                        <div class="stat-icon cyan"><i class="fas fa-building"></i></div>
+                        <div class="stat-icon blue"><i class="fas fa-building"></i></div>
                         <div class="stat-number"><span class="counter" data-target="{{ info.nama_maskapai }}">0</span></div>
-                        <p class="stat-label">Maskapai</p>
+                        <p class="stat-label">Maskapai Tercakup</p>
+                        <p class="stat-desc">Maskapai penerbangan yang terdaftar dalam sistem</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 reveal reveal-delay-4">
+                <div class="col-lg-4 col-md-6 reveal reveal-delay-3">
                     <div class="stat-card">
-                        <div class="stat-icon amber"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="stat-icon cyan"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="stat-number"><span class="counter" data-target="{{ info.bandara_asal + info.bandara_tujuan }}">0</span></div>
-                        <p class="stat-label">Total Bandara</p>
+                        <p class="stat-label">Bandara</p>
+                        <p class="stat-desc">Total bandara asal dan tujuan yang didukung</p>
                     </div>
                 </div>
             </div>
@@ -98,29 +160,37 @@
     <section class="section bg-surface" id="fitur">
         <div class="container">
             <div class="section-header reveal">
+                <span class="section-tag">Keunggulan</span>
                 <h2>Mengapa Menggunakan Sistem Ini?</h2>
-                <p>Teknologi prediksi yang andal dan mudah diakses</p>
+                <p>Teknologi prediksi yang andal, akurat, dan mudah diakses oleh siapa saja</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4 reveal reveal-delay-1">
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
                     <div class="feature-card">
                         <div class="feature-icon"><i class="fas fa-brain"></i></div>
                         <h5>Machine Learning</h5>
-                        <p>Algoritma Random Forest dengan label encoders untuk prediksi keterlambatan yang akurat.</p>
+                        <p>Algoritma <strong>Random Forest Regressor</strong> yang telah di-training dengan dataset penerbangan untuk prediksi akurat.</p>
                     </div>
                 </div>
-                <div class="col-md-4 reveal reveal-delay-2">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-database"></i></div>
-                        <h5>Data Historis</h5>
-                        <p>Dibangun dari ribuan data penerbangan dengan durasi normal yang sudah terukur.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 reveal reveal-delay-3">
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
                     <div class="feature-card">
                         <div class="feature-icon"><i class="fas fa-cloud-sun"></i></div>
-                        <h5>Analisis Cuaca</h5>
-                        <p>Mempertimbangkan suhu, tekanan, dan kecepatan angin di bandara tujuan.</p>
+                        <h5>Cuaca Real-Time</h5>
+                        <p>Mengintegrasikan data cuaca <strong>real-time</strong> dari Open-Meteo API untuk akurasi prediksi yang lebih baik.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h5>Proses Cepat</h5>
+                        <p>Hasil prediksi tersaji dalam <strong>hitungan detik</strong> setelah data dimasukkan. Tanpa waktu tunggu yang lama.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h5>Mudah Digunakan</h5>
+                        <p>Antarmuka yang <strong>sederhana dan intuitif</strong>. Bisa diakses dari desktop maupun perangkat mobile.</p>
                     </div>
                 </div>
             </div>
@@ -128,39 +198,134 @@
     </section>
 
     <!-- Routes -->
-    <section class="section">
+    <section class="section" id="rute">
         <div class="container">
             <div class="section-header reveal">
+                <span class="section-tag">Rute Penerbangan</span>
                 <h2>Rute yang Didukung</h2>
-                <p>Prediksi tersedia untuk rute-rute berikut</p>
+                <p>Prediksi tersedia untuk rute penerbangan dari Jakarta ke kota-kota berikut</p>
             </div>
             <div class="row g-3">
                 <div class="col-md-6 col-lg-3 reveal reveal-delay-1">
                     <div class="route-card">
-                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
-                        <h6>Jakarta ↔ Padang</h6>
-                        <span class="duration">Durasi normal: 110 menit</span>
+                        <div class="route-card-bg" style="background-image: linear-gradient(135deg, #1e3a5f, #2d5a87);"></div>
+                        <div class="route-card-content">
+                            <div class="route-cities">
+                                <span class="route-city">Jakarta</span>
+                                <span class="route-arrow"><i class="fas fa-plane"></i></span>
+                                <span class="route-city">Padang</span>
+                            </div>
+                            <div class="route-meta">
+                                <span class="route-distance"><i class="far fa-clock"></i> 110 menit</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal reveal-delay-2">
                     <div class="route-card">
-                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
-                        <h6>Jakarta ↔ Surabaya</h6>
-                        <span class="duration">Durasi normal: 80 menit</span>
+                        <div class="route-card-bg" style="background-image: linear-gradient(135deg, #1a4731, #2d7a55);"></div>
+                        <div class="route-card-content">
+                            <div class="route-cities">
+                                <span class="route-city">Jakarta</span>
+                                <span class="route-arrow"><i class="fas fa-plane"></i></span>
+                                <span class="route-city">Surabaya</span>
+                            </div>
+                            <div class="route-meta">
+                                <span class="route-distance"><i class="far fa-clock"></i> 80 menit</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal reveal-delay-3">
                     <div class="route-card">
-                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
-                        <h6>Jakarta ↔ Bali</h6>
-                        <span class="duration">Durasi normal: 170 menit</span>
+                        <div class="route-card-bg" style="background-image: linear-gradient(135deg, #5a2d3c, #874f6a);"></div>
+                        <div class="route-card-content">
+                            <div class="route-cities">
+                                <span class="route-city">Jakarta</span>
+                                <span class="route-arrow"><i class="fas fa-plane"></i></span>
+                                <span class="route-city">Bali</span>
+                            </div>
+                            <div class="route-meta">
+                                <span class="route-distance"><i class="far fa-clock"></i> 170 menit</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 reveal reveal-delay-4">
                     <div class="route-card">
-                        <div class="route-icon"><i class="fas fa-arrows-alt-h"></i></div>
-                        <h6>Jakarta ↔ Makassar</h6>
-                        <span class="duration">Durasi normal: 200 menit</span>
+                        <div class="route-card-bg" style="background-image: linear-gradient(135deg, #3d2d5a, #6a4f87);"></div>
+                        <div class="route-card-content">
+                            <div class="route-cities">
+                                <span class="route-city">Jakarta</span>
+                                <span class="route-arrow"><i class="fas fa-plane"></i></span>
+                                <span class="route-city">Makassar</span>
+                            </div>
+                            <div class="route-meta">
+                                <span class="route-distance"><i class="far fa-clock"></i> 200 menit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section bg-surface" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Tanya Jawab</span>
+                <h2>Pertanyaan Umum</h2>
+                <p>Informasi yang sering ditanyakan tentang sistem prediksi ini</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="faq-list reveal">
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Apa itu Flight Delay Predictor?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Flight Delay Predictor adalah sistem berbasis Machine Learning yang memprediksi estimasi waktu kedatangan penerbangan. Sistem menggunakan algoritma Random Forest Regressor yang dilatih dengan data historis penerbangan dan mempertimbangkan kondisi cuaca real-time untuk memberikan prediksi yang akurat.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Bagaimana cara menggunakan sistem ini?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Cukup kunjungi halaman <a href="/prediksi">Prediksi</a>, isi data penerbangan Anda (rute, maskapai, tanggal, jam, dan cuaca), lalu klik tombol prediksi. Hasil akan tampil dalam hitungan detik.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Apakah data cuaca diambil secara real-time?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Ya, sistem terintegrasi dengan <strong>Open-Meteo API</strong> untuk mengambil data cuaca terkini di bandara tujuan. Data yang digunakan meliputi suhu, tekanan udara, dan kecepatan angin untuk meningkatkan akurasi prediksi.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Rute apa saja yang didukung?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Saat ini sistem mendukung rute dari Jakarta ke: Padang, Surabaya, Bali, dan Makassar, serta rute sebaliknya (kota-kota tersebut menuju Jakarta).</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Seberapa akurat prediksi yang dihasilkan?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Sistem menggunakan algoritma <strong>Random Forest Regressor</strong> yang telah dilatih menggunakan dataset historis penerbangan. Akurasi prediksi bergantung pada kelengkapan data yang dimasukkan dan kondisi aktual di lapangan. Prediksi bersifat estimasi dan dapat berbeda dengan kondisi nyata.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -171,11 +336,18 @@
     <section class="section pt-0">
         <div class="container">
             <div class="cta-banner reveal">
-                <h2>Siap Mencoba Prediksi?</h2>
-                <p>Masukkan detail penerbangan Anda dan dapatkan estimasi waktu kedatangan dalam hitungan detik.</p>
-                <a href="/prediksi" class="btn-primary-app lg">
-                    <i class="fas fa-plane"></i> Mulai Sekarang
-                </a>
+                <div class="cta-banner-content">
+                    <h2>Siap Mencoba Prediksi?</h2>
+                    <p>Masukkan detail penerbangan Anda dan dapatkan estimasi waktu kedatangan dalam hitungan detik. Gratis dan tanpa registrasi!</p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="/prediksi" class="btn-primary-app lg">
+                            <i class="fas fa-plane"></i> Mulai Sekarang
+                        </a>
+                        <a href="#cara-kerja" class="btn-outline-app light">
+                            <i class="fas fa-info-circle"></i> Pelajari Dulu
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -183,10 +355,48 @@
     <!-- Footer -->
     <footer class="footer-app">
         <div class="container">
-            <p>
-                <span class="footer-brand">Flight Delay Predictor</span>
-                &mdash; Rizki Fauzan Yahya &copy; 2025
-            </p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand-wrap">
+                        <span class="brand-icon"><i class="fas fa-plane"></i></span>
+                        <span class="footer-brand">Flight Delay Predictor</span>
+                    </div>
+                    <p class="footer-desc">Sistem prediksi keterlambatan penerbangan berbasis Machine Learning untuk memudahkan perencanaan perjalanan Anda.</p>
+                </div>
+                <div class="footer-col">
+                    <h6>Navigasi</h6>
+                    <ul class="footer-links">
+                        <li><a href="/"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="/prediksi"><i class="fas fa-chevron-right"></i> Prediksi</a></li>
+                        <li><a href="#cara-kerja"><i class="fas fa-chevron-right"></i> Cara Kerja</a></li>
+                        <li><a href="#faq"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h6>Rute Didukung</h6>
+                    <ul class="footer-links">
+                        <li><span><i class="fas fa-chevron-right"></i> Jakarta &harr; Padang</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Jakarta &harr; Surabaya</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Jakarta &harr; Bali</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Jakarta &harr; Makassar</span></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h6>Teknologi</h6>
+                    <ul class="footer-links">
+                        <li><span><i class="fas fa-chevron-right"></i> Python Flask</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Random Forest</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Open-Meteo API</span></li>
+                        <li><span><i class="fas fa-chevron-right"></i> Bootstrap 5</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <span class="footer-brand">Flight Delay Predictor</span>
+                    &mdash; Rizki Fauzan Yahya &copy; 2025
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -194,11 +404,11 @@
     <script>
         // ===== Particles =====
         (function initParticles() {
-            const container = document.getElementById('particles');
+            var container = document.getElementById('particles');
             if (!container) return;
-            const count = 20;
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
+            var count = 20;
+            for (var i = 0; i < count; i++) {
+                var p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + '%';
                 p.style.animationDelay = Math.random() * 8 + 's';
@@ -210,8 +420,8 @@
 
         // ===== Sticky Nav Shadow =====
         (function navScroll() {
-            const nav = document.getElementById('navbar');
-            let ticking = false;
+            var nav = document.getElementById('navbar');
+            var ticking = false;
             window.addEventListener('scroll', function () {
                 if (!ticking) {
                     requestAnimationFrame(function () {
@@ -225,9 +435,9 @@
 
         // ===== Scroll Reveal =====
         (function scrollReveal() {
-            const els = document.querySelectorAll('.reveal');
+            var els = document.querySelectorAll('.reveal');
             if (!els.length) return;
-            const observer = new IntersectionObserver(function (entries) {
+            var observer = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
@@ -266,19 +476,18 @@
             counters.forEach(function (c) { observer.observe(c); });
         })();
 
-        // ===== Route Card Mouse Parallax =====
-        (function routeCards() {
-            var cards = document.querySelectorAll('.route-card');
-            cards.forEach(function (card) {
-                card.addEventListener('mousemove', function (e) {
-                    var rect = card.getBoundingClientRect();
-                    var x = ((e.clientX - rect.left) / rect.width) * 100;
-                    var y = ((e.clientY - rect.top) / rect.height) * 100;
-                    card.style.setProperty('--mouse-x', x + '%');
-                    card.style.setProperty('--mouse-y', y + '%');
-                });
+        // ===== FAQ Toggle =====
+        function toggleFaq(btn) {
+            var item = btn.parentElement;
+            var isOpen = item.classList.contains('faq-open');
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(function (el) {
+                el.classList.remove('faq-open');
             });
-        })();
+            if (!isOpen) {
+                item.classList.add('faq-open');
+            }
+        }
     </script>
 </body>
 </html>

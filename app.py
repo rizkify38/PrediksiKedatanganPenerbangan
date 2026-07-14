@@ -56,19 +56,14 @@ def _dropdown_from_mapping():
 
 @app.route("/")
 def home():
-    total_penerbangan = len(df_uji)
     daftar_maskapai = df_uji["Maskapai"].unique()
     daftar_rute = df_uji["Rute"].unique()
     bandara_asal = df_uji["Bandara_Asal"].unique()
     bandara_tujuan = df_uji["Bandara_Tujuan"].unique()
 
-    # Tampilkan 8 maskapai pada beranda (bukan jumlah sebenarnya)
-    jumlah_maskapai_tampilan = 8
-
     info = {
-        "total_penerbangan": total_penerbangan,
         "rute_maskapai": len(daftar_rute),
-        "nama_maskapai": jumlah_maskapai_tampilan,
+        "nama_maskapai": len(daftar_maskapai),
         "bandara_asal": len(bandara_asal),
         "bandara_tujuan": len(bandara_tujuan),
     }
